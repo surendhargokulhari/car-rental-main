@@ -254,7 +254,6 @@
       carsContainer.appendChild(carCard);
     });
 
-    // Global access to form controls
     window.openBookingForm = function (carModel) {
       document.getElementById("car-model").value = carModel;
       document.getElementById("booking-form").style.display = "block";
@@ -266,17 +265,16 @@
       document.getElementById("cars").style.display = "flex";
     };
 
-    // Form submission
     const form = document.getElementById("form");
     if (form) {
       form.addEventListener("submit", async function (e) {
         e.preventDefault();
 
         const bookingData = {
-          name: document.getElementById("name").value.trim(),
-          email: document.getElementById("email").value.trim(),
-          carModel: document.getElementById("car-model").value.trim(),
-          phone: document.getElementById("phone").value.trim()
+          name: document.getElementById("name").value,
+          email: document.getElementById("email").value,
+          carModel: document.getElementById("car-model").value,
+          phone: document.getElementById("phone").value
         };
 
         try {
@@ -292,9 +290,9 @@
 
           if (response.ok) {
             alert("Booking successful!");
-            window.location.href = "payment.html";
+            window.location.href = "payment.html"; // Or your success page
           } else {
-            alert(`Booking failed: ${data.message || 'Unknown error'}`);
+            alert(`Booking failed: ${data.message}`);
           }
         } catch (err) {
           console.error("Booking error:", err);
