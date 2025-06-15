@@ -114,11 +114,12 @@
           id="cardNumber"
           maxlength="16"
           pattern="\d{16}"
+          required
           title="Enter a valid 16-digit card number"
         />
 
         <label for="expiryDate">Expiry Date:</label>
-        <input type="month" id="expiryDate" />
+        <input type="month" id="expiryDate" required />
 
         <label for="cvv">CVV:</label>
         <input
@@ -126,6 +127,7 @@
           id="cvv"
           maxlength="4"
           pattern="\d{3,4}"
+          required
           title="Enter a valid 3 or 4-digit CVV"
         />
       </div>
@@ -136,8 +138,9 @@
         <input
           type="text"
           id="upiId"
-          pattern="^\w+@\w+$"
+          pattern="^[\w.-]+@[\w.-]+$"
           title="Enter a valid UPI ID like name@bank"
+          required
         />
       </div>
 
@@ -156,13 +159,20 @@
     <script>
       function togglePaymentFields() {
         const method = document.getElementById("paymentMethod").value;
-        document.getElementById("cardFields").classList.add("hidden");
-        document.getElementById("upiFields").classList.add("hidden");
+        const cardFields = document.getElementById("cardFields");
+        const upiFields = document.getElementById("upiFields");
+
+        cardFields.classList.add("hidden");
+        upiFields.classList.add("hidden");
 
         if (method === "card") {
-          document.getElementById("cardFields").classList.remove("hidden");
+          cardFields.classList.remove("hidden");
+          document.getElementById("upiId").removeAttribute("required");
         } else if (method === "upi") {
-          document.getElementById("upiFields").classList.remove("hidden");
+          upiFields.classList.remove("hidden");
+          document.getElementById("cardNumber").removeAttribute("required");
+          document.getElementById("expiryDate").removeAttribute("required");
+          document.getElementById("cvv").removeAttribute("required");
         }
       }
 
@@ -187,7 +197,7 @@
           showSuccessTick("Card Payment successful!");
         } else if (method === "upi") {
           const upiId = document.getElementById("upiId").value.trim();
-          if (!/^\w+@\w+$/.test(upiId)) {
+          if (!/^[\w.-]+@[\w.-]+$/.test(upiId)) {
             alert("Please enter a valid UPI ID.");
             return false;
           }
@@ -195,8 +205,9 @@
           showSuccessTick("UPI Payment successful!");
         }
 
+        // Reset form and hide fields
         document.getElementById("paymentForm").reset();
-        togglePaymentFields(); // Reset form fields visibility
+        togglePaymentFields();
         return true;
       }
 
