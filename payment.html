@@ -14,6 +14,7 @@
         justify-content: center;
         align-items: center;
         height: 100vh;
+        flex-direction: column;
       }
 
       #paymentForm {
@@ -48,7 +49,8 @@
         box-sizing: border-box;
       }
 
-      input:focus, select:focus {
+      input:focus,
+      select:focus {
         border-color: #007bff;
         outline: none;
         box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
@@ -70,14 +72,20 @@
         display: none;
       }
 
-      #qrCode {
-        margin-top: 15px;
+      #successTick {
+        margin-top: 20px;
         text-align: center;
       }
 
-      #qrCode img {
-        max-width: 100%;
+      #successTick img {
+        width: 100px;
         height: auto;
+      }
+
+      #successTick p {
+        color: green;
+        font-weight: bold;
+        margin-top: 10px;
       }
 
       @media (max-width: 600px) {
@@ -133,17 +141,24 @@
         />
       </div>
 
-
       <input type="submit" value="Pay Now" />
     </form>
+
+    <!-- Success Tick Display -->
+    <div id="successTick" class="hidden">
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/190/190411.png"
+        alt="Success"
+      />
+      <p>Payment Successful</p>
+    </div>
 
     <script>
       function togglePaymentFields() {
         const method = document.getElementById("paymentMethod").value;
-
         document.getElementById("cardFields").classList.add("hidden");
         document.getElementById("upiFields").classList.add("hidden");
-        
+
         if (method === "card") {
           document.getElementById("cardFields").classList.remove("hidden");
         } else if (method === "upi") {
@@ -169,7 +184,7 @@
             return false;
           }
 
-          alert("Card Payment successful!");
+          showSuccessTick("Card Payment successful!");
         } else if (method === "upi") {
           const upiId = document.getElementById("upiId").value.trim();
           if (!/^\w+@\w+$/.test(upiId)) {
@@ -177,12 +192,22 @@
             return false;
           }
 
-          alert("UPI Payment successful!");
-        } 
+          showSuccessTick("UPI Payment successful!");
+        }
 
         document.getElementById("paymentForm").reset();
-        togglePaymentFields(); // Reset UI
+        togglePaymentFields(); // Reset form fields visibility
         return true;
+      }
+
+      function showSuccessTick(message) {
+        alert(message);
+        const tick = document.getElementById("successTick");
+        tick.classList.remove("hidden");
+
+        setTimeout(() => {
+          tick.classList.add("hidden");
+        }, 3000);
       }
     </script>
   </body>
