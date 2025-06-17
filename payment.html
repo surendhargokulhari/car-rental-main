@@ -3,65 +3,93 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Multi Payment Form</title>
+  <title>Payment Gateway</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to top, #1e3c72, #2a5298);
       margin: 0;
-      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #232526, #414345);
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      flex-direction: column;
-    }
-
-    #paymentForm {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      width: 320px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    h2, label {
-      text-align: center;
       color: #333;
     }
 
-    input, select {
+    #paymentForm {
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      width: 360px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #1e3c72;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: 500;
+    }
+
+    input, select, button {
       width: 100%;
       padding: 10px;
-      margin-top: 5px;
-      border-radius: 5px;
       border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    button {
+      margin-top: 8px;
+      background-color: #6c757d;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
     }
 
     input[type="submit"] {
-      background-color: #007bff;
+      background-color: #1e90ff;
       color: white;
+      font-weight: bold;
       border: none;
-      cursor: pointer;
       margin-top: 20px;
+      cursor: pointer;
+      transition: background 0.3s ease;
     }
 
     input[type="submit"]:hover {
-      background-color: #0056b3;
+      background-color: #0f72d3;
     }
 
     .hidden {
       display: none;
     }
 
-    #successTick {
-      margin-top: 20px;
-      text-align: center;
-      color: white;
+    .payment-icon {
+      font-size: 20px;
+      margin-right: 8px;
     }
 
-    #successTick img {
-      width: 100px;
+    #successMessage {
+      text-align: center;
+      color: green;
+      margin-top: 20px;
+      font-size: 18px;
+    }
+
+    #loading {
+      text-align: center;
+      margin-top: 10px;
+      color: #007bff;
     }
 
     @media (max-width: 600px) {
@@ -74,46 +102,47 @@
 <body>
 
   <form id="paymentForm" onsubmit="return processPayment(event)">
-    <h2>Choose Payment Method</h2>
+    <h2><i class="fas fa-credit-card"></i> Pay Securely</h2>
 
-    <label for="paymentMethod">Payment Method:</label>
+    <label for="paymentMethod"><i class="fas fa-hand-holding-usd payment-icon"></i>Payment Method:</label>
     <select id="paymentMethod" onchange="togglePaymentFields()" required>
-      <option value="">--Select--</option>
-      <option value="card">Card</option>
+      <option value="">-- Select Payment Method --</option>
+      <option value="card">Credit/Debit Card</option>
       <option value="upi">UPI</option>
     </select>
 
     <div id="cardFields" class="hidden">
-      <label for="cardNumber">Card Number:</label>
-      <input type="text" id="cardNumber" maxlength="16" pattern="\d{16}" />
+      <label for="cardNumber"><i class="fas fa-credit-card payment-icon"></i>Card Number:</label>
+      <input type="text" id="cardNumber" maxlength="16" placeholder="1234 5678 9012 3456" pattern="\d{16}" />
 
       <label for="expiryDate">Expiry Date:</label>
       <input type="month" id="expiryDate" />
 
       <label for="cvv">CVV:</label>
-      <input type="text" id="cvv" maxlength="4" pattern="\d{3,4}" />
+      <input type="text" id="cvv" maxlength="4" placeholder="123" pattern="\d{3,4}" />
     </div>
 
     <div id="upiFields" class="hidden">
-      <label for="upiId">UPI ID:</label>
-      <input type="text" id="upiId" pattern="^[\\w.-]+@[\\w.-]+$" />
+      <label for="upiId"><i class="fas fa-university payment-icon"></i>UPI ID:</label>
+      <input type="text" id="upiId" placeholder="example@upi" />
+      <button type="button" onclick="startScanner()">Scan QR</button>
+      <div id="qr-reader" style="width: 100%; margin-top: 10px;"></div>
     </div>
 
-    <input type="submit" value="Pay Now"/>
+    <input type="submit" value="Pay Now" />
+    <div id="loading" class="hidden">Processing payment...</div>
+    <div id="successMessage" class="hidden">✅ Payment Successful. Redirecting...</div>
   </form>
-
-  <div id="successTick" class="hidden">
-    <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="Success" />
-    <p>✅ Payment Successful</p>
-  </div>
 
   <script>
     function togglePaymentFields() {
       const method = document.getElementById("paymentMethod").value;
-      document.getElementById("cardFields").classList.toggle("hidden", method !== "card");
-      document.getElementById("upiFields").classList.toggle("hidden", method !== "upi");
+      const cardFields = document.getElementById("cardFields");
+      const upiFields = document.getElementById("upiFields");
 
-      // Enable/disable required fields
+      cardFields.classList.toggle("hidden", method !== "card");
+      upiFields.classList.toggle("hidden", method !== "upi");
+
       document.getElementById("cardNumber").required = method === "card";
       document.getElementById("expiryDate").required = method === "card";
       document.getElementById("cvv").required = method === "card";
@@ -124,23 +153,26 @@
       event.preventDefault();
 
       const method = document.getElementById("paymentMethod").value;
+      const loading = document.getElementById("loading");
+      const successMsg = document.getElementById("successMessage");
 
       if (method === "card") {
         const cardNumber = document.getElementById("cardNumber").value.trim();
         const cvv = document.getElementById("cvv").value.trim();
         if (!/^\d{16}$/.test(cardNumber) || !/^\d{3,4}$/.test(cvv)) {
-          alert("Invalid card details.");
+          alert("Enter valid card details.");
           return false;
         }
       } else if (method === "upi") {
         const upiId = document.getElementById("upiId").value.trim();
-        if (!/^[\\w.-]+@[\\w.-]+$/.test(upiId)) {
+        if (!/^[\w.-]+@[\w.-]+$/.test(upiId)) {
           alert("Invalid UPI ID.");
           return false;
         }
       }
 
-      // Simulate booking data
+      loading.classList.remove("hidden");
+
       const booking = {
         name: "Gokulakrishnan",
         email: "gokulhari182@gmail.com",
@@ -159,25 +191,56 @@
       })
       .then(res => res.json())
       .then(data => {
-        if (data.success) {
-          showSuccessTick("✅ Payment Successful. Confirmation Email Sent!");
-        } else {
-          showSuccessTick("✅ Payment Successful. But Email Failed.");
-        }
+        loading.classList.add("hidden");
+        successMsg.textContent = data.success
+          ? "✅ Payment Successful. Email Sent!"
+          : "✅ Payment Successful. Email Failed.";
+        successMsg.classList.remove("hidden");
+
+        setTimeout(() => {
+          window.location.href = "car.html";
+        }, 3000);
       })
       .catch(err => {
+        loading.classList.add("hidden");
+        successMsg.textContent = "✅ Payment Done.";
+        successMsg.classList.remove("hidden");
         console.error(err);
-        showSuccessTick("✅ Payment Done. Email Error.");
       });
 
       return false;
     }
 
-    function showSuccessTick(message) {
-      alert(message);
-      document.getElementById("paymentForm").classList.add("hidden");
-      document.getElementById("successTick").classList.remove("hidden");
-      setTimeout(() => window.location.href = "car.html", 3000);
+    let qrScannerStarted = false;
+    function startScanner() {
+      const qrReader = document.getElementById("qr-reader");
+
+      if (!qrScannerStarted) {
+        const html5QrCode = new Html5Qrcode("qr-reader");
+
+        Html5Qrcode.getCameras().then(devices => {
+          if (devices && devices.length) {
+            const cameraId = devices[0].id;
+            html5QrCode.start(
+              cameraId,
+              { fps: 10, qrbox: { width: 250, height: 250 } },
+              (decodedText, decodedResult) => {
+                document.getElementById("upiId").value = decodedText;
+                html5QrCode.stop().then(() => {
+                  qrReader.innerHTML = "";
+                  qrScannerStarted = false;
+                });
+              },
+              errorMessage => {}
+            ).catch(err => {
+              console.error("Unable to start scanning", err);
+            });
+            qrScannerStarted = true;
+          }
+        }).catch(err => {
+          console.error("Camera error", err);
+        });
+      }
     }
   </script>
 </body>
