@@ -62,6 +62,13 @@
       text-align: center;
       margin-top: 1rem;
     }
+    a {
+      color: #e84545;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -70,11 +77,11 @@
     <form id="loginForm">
       <div class="input-group">
         <label for="email">Email:</label>
-        <input type="email" id="email" required>
+        <input type="email" id="email" required />
       </div>
       <div class="input-group">
         <label for="password">Password:</label>
-        <input type="password" id="password" required>
+        <input type="password" id="password" required />
       </div>
       <button type="submit">Login</button>
     </form>
@@ -87,45 +94,38 @@
     </div>
     <div class="g_id_signin" data-type="standard"></div>
 
-    <p>Don't have an account? <a href="sign up.html">Sign Up</a></p>
+    <p>Don't have an account? <a href="sign%20up.html">Sign Up</a></p>
   </div>
 
-  <!-- Scripts -->
+  <!-- External Scripts -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
 
+  <!-- Auth Logic -->
   <script>
-    // LocalStorage Login
-document.getElementById("loginForm").addEventListener("submit", function(event) {
-  event.preventDefault();
-  
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
-  
-  const storedUser = JSON.parse(localStorage.getItem("car_rental_user"));
-  
-  if (storedUser) {
-    if (email === storedUser.email && password === storedUser.password) {
-      alert("Login successful!");
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const storedUser = JSON.parse(localStorage.getItem("car_rental_user"));
+
+      if (storedUser && email === storedUser.email && password === storedUser.password) {
+        alert("Login successful!");
+        window.location.href = "https://surendhargokulhari.github.io/car-rental-Main/index.html";
+      } else if (storedUser) {
+        alert("Invalid email or password. Please try again.");
+      } else {
+        alert("No user found. Please sign up first.");
+      }
+    });
+
+    function handleGoogleSignIn(response) {
+      const userObject = jwt_decode(response.credential);
+      console.log("Google User:", userObject);
+      alert("Google Login Successful! Welcome " + userObject.name);
+      localStorage.setItem("car_rental_google_user", JSON.stringify(userObject));
       window.location.href = "https://surendhargokulhari.github.io/car-rental-Main/index.html";
-    } else {
-      alert("Invalid email or password. Please try again.");
     }
-  } else {
-    alert("No user found. Please sign up first.");
-  }
-});
-
-// Google Sign-In Callback
-function handleGoogleSignIn(response) {
-  const userObject = jwt_decode(response.credential);
-  console.log("Google User:", userObject);
-
-  alert("Google Login Successful! Welcome " + userObject.name);
-  localStorage.setItem("car_rental_google_user", JSON.stringify(userObject));
-  window.location.href = "https://surendhargokulhari.github.io/car-rental-Main/index.html";
-}
-
   </script>
 </body>
 </html>
