@@ -117,29 +117,30 @@
 
   <!-- Auth Logic -->
   <script>
-    document.getElementById("loginForm").addEventListener("submit", function(event) {
-      event.preventDefault();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
-      const storedUser = JSON.parse(localStorage.getItem("car_rental_user"));
+   document.getElementById("loginForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const storedUser = JSON.parse(localStorage.getItem("car_rental_user"));
 
-      if (storedUser && email === storedUser.email && password === storedUser.password) {
-        alert("Login successful!");
-        window.location.href = "http://127.0.0.1:5500/car-rental-main/index..html"; // Use relative path
-      } else if (storedUser) {
-        alert("Invalid email or password. Please try again.");
-      } else {
-        alert("No user found. Please sign up first.");
-      }
-    });
+  if (storedUser && email === storedUser.email && password === storedUser.password) {
+    alert("Login successful!");
+    window.location.href = "index..html"; // ✅ CORRECTED
+  } else if (storedUser) {
+    alert("Invalid email or password. Please try again.");
+  } else {
+    alert("No user found. Please sign up first.");
+  }
+});
 
-    function handleGoogleSignIn(response) {
-      const userObject = jwt_decode(response.credential);
-      console.log("Google User:", userObject);
-      alert("Google Login Successful! Welcome " + userObject.name);
-      localStorage.setItem("car_rental_google_user", JSON.stringify(userObject));
-      window.location.href = "http://127.0.0.1:5500/car-rental-main/index..html"; // Use relative path
-    }
+function handleGoogleSignIn(response) {
+  const userObject = jwt_decode(response.credential);
+  console.log("Google User:", userObject);
+  alert("Google Login Successful! Welcome " + userObject.name);
+  localStorage.setItem("car_rental_google_user", JSON.stringify(userObject));
+  window.location.href = "index..html"; // ✅ CORRECTED
+}
+
   </script>
 </body>
 </html>
