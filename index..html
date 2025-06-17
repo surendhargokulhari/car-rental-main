@@ -216,30 +216,47 @@
       </div>
     </div>
 
-    <script>
-      const container = document.getElementById("hero");
+     <script>
+    const container = document.getElementById("hero");
 
-      const backgrounds = [
-        "url('https://images.pexels.com/photos/210182/pexels-photo-210182.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')",
-        "url('https://cdn.pixabay.com/photo/2023/03/17/16/41/traffic-7859033_1280.jpg')",
-      ];
+    const backgrounds = [
+      "url('https://images.pexels.com/photos/210182/pexels-photo-210182.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')",
+      "url('https://cdn.pixabay.com/photo/2023/03/17/16/41/traffic-7859033_1280.jpg')"
+    ];
 
-      let index = 0;
+    let index = 0;
 
-      function changeBackground() {
-        container.style.backgroundImage = backgrounds[index];
-        index = (index + 1) % backgrounds.length;
+    function changeBackground() {
+      container.style.backgroundImage = backgrounds[index];
+      index = (index + 1) % backgrounds.length;
+    }
+
+    changeBackground(); // Initial call
+    setInterval(changeBackground, 5000); // Every 5s
+
+    // Redirect after submit
+    document.getElementById("booking-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      window.location.href = "car.html";
+    });
+
+    // Date validation
+    const pickupDateInput = document.getElementById("pickupDate");
+    const returnDateInput = document.getElementById("returnDate");
+
+    pickupDateInput.addEventListener("change", () => {
+      if (pickupDateInput.value) {
+        const pickupDate = new Date(pickupDateInput.value);
+        pickupDate.setDate(pickupDate.getDate() + 1); // Next day
+
+        const minReturn = pickupDate.toISOString().split("T")[0];
+        returnDateInput.min = minReturn;
+
+        if (returnDateInput.value && returnDateInput.value < minReturn) {
+          returnDateInput.value = "";
+        }
       }
-
-      changeBackground(); // initial call
-      setInterval(changeBackground, 5000); // every 5s
-
-      document
-        .getElementById("booking-form")
-        .addEventListener("submit", function (e) {
-          e.preventDefault();
-          window.location.href = "car.html";
-        });
-    </script>
+    });
+  </script>
   </body>
 </html>
