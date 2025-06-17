@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Car Rental Login</title>
   <style>
     body {
@@ -64,21 +64,22 @@
   </style>
 </head>
 <body>
+
   <div class="container">
     <h2>Login</h2>
     <form id="loginForm">
       <div class="input-group">
         <label for="email">Email:</label>
-        <input type="email" id="email" required>
+        <input type="email" id="email" required />
       </div>
       <div class="input-group">
         <label for="password">Password:</label>
-        <input type="password" id="password" required>
+        <input type="password" id="password" required />
       </div>
       <button type="submit">Login</button>
     </form>
 
-    <!-- Google Sign-In Button -->
+    <!-- Google Sign-In -->
     <div id="g_id_onload"
          data-client_id="216776426584-t8m5a6f9etdobmsbk7lu83m5jiia26pv.apps.googleusercontent.com"
          data-callback="handleGoogleSignIn"
@@ -94,19 +95,19 @@
   <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
 
   <script>
-    // LocalStorage Login
+    // LocalStorage Email/Password Login
     document.getElementById("loginForm").addEventListener("submit", function(event) {
       event.preventDefault();
-      
+
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
-      
+
       const storedUser = JSON.parse(localStorage.getItem("car_rental_user"));
-      
+
       if (storedUser) {
         if (email === storedUser.email && password === storedUser.password) {
           alert("Login successful!");
-          window.location.href = "index.html"; // ✅ Corrected
+          window.location.href = "index.html"; // ✅ Redirect
         } else {
           alert("Invalid email or password. Please try again.");
         }
@@ -115,15 +116,18 @@
       }
     });
 
-    // Google Sign-In Callback
+    // ✅ Google Sign-In Callback
     function handleGoogleSignIn(response) {
       const userObject = jwt_decode(response.credential);
       console.log("Google User:", userObject);
 
       alert("Google Login Successful! Welcome " + userObject.name);
       localStorage.setItem("car_rental_google_user", JSON.stringify(userObject));
-      window.location.href = "index.html"; // ✅ Corrected
+
+      // ✅ Redirect after Google Login
+      window.location.href = "index.html";
     }
   </script>
+
 </body>
 </html>
