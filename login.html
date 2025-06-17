@@ -96,35 +96,36 @@
 
   <script>
     // LocalStorage Login
-    document.getElementById("loginForm").addEventListener("submit", function(event) {
-      event.preventDefault();
-      
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
-      
-      const storedUser = JSON.parse(localStorage.getItem("car_rental_user"));
-      
-      if (storedUser) {
-        if (email === storedUser.email && password === storedUser.password) {
-          alert("Login successful!");
-          window.location.href = "http://127.0.0.1:5500/car-rental-main/index..html";
-        } else {
-          alert("Invalid email or password. Please try again.");
-        }
-      } else {
-        alert("No user found. Please sign up first.");
-      }
-    });
-
-    // Google Sign-In Callback
-    function handleGoogleSignIn(response) {
-      const userObject = jwt_decode(response.credential);
-      console.log("Google User:", userObject);
-
-      alert("Google Login Successful! Welcome " + userObject.name);
-      localStorage.setItem("car_rental_google_user", JSON.stringify(userObject));
-      window.location.href = "http://127.0.0.1:5500/car-rental-main/index..html";
+document.getElementById("loginForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+  
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  
+  const storedUser = JSON.parse(localStorage.getItem("car_rental_user"));
+  
+  if (storedUser) {
+    if (email === storedUser.email && password === storedUser.password) {
+      alert("Login successful!");
+      window.location.href = "https://surendhargokulhari.github.io/car-rental-Main/index.html";
+    } else {
+      alert("Invalid email or password. Please try again.");
     }
+  } else {
+    alert("No user found. Please sign up first.");
+  }
+});
+
+// Google Sign-In Callback
+function handleGoogleSignIn(response) {
+  const userObject = jwt_decode(response.credential);
+  console.log("Google User:", userObject);
+
+  alert("Google Login Successful! Welcome " + userObject.name);
+  localStorage.setItem("car_rental_google_user", JSON.stringify(userObject));
+  window.location.href = "https://surendhargokulhari.github.io/car-rental-Main/index.html";
+}
+
   </script>
 </body>
 </html>
