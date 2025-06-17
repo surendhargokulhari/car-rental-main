@@ -5,10 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Car Rental Login</title>
   <style>
-    /* Basic Styles */
     body {
       font-family: Arial, sans-serif;
-      background-image: radial-gradient( circle farthest-corner at 3.2% 49.6%,  rgba(80,12,139,0.87) 0%, rgba(161,10,144,0.72) 83.6% );
+      background-image: radial-gradient(circle farthest-corner at 3.2% 49.6%, rgba(80,12,139,0.87) 0%, rgba(161,10,144,0.72) 83.6%);
       color: #333;
       display: flex;
       justify-content: center;
@@ -53,6 +52,11 @@
     button:hover {
       background: #d73838;
     }
+    .g_id_signin {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+    }
     p {
       text-align: center;
       margin-top: 1rem;
@@ -73,24 +77,36 @@
       </div>
       <button type="submit">Login</button>
     </form>
+
+    <!-- Google Sign-In Button -->
+    <div id="g_id_onload"
+         data-client_id="216776426584-t8m5a6f9etdobmsbk7lu83m5jiia26pv.apps.googleusercontent.com"
+         data-callback="handleGoogleSignIn"
+         data-auto_prompt="false">
+    </div>
+    <div class="g_id_signin" data-type="standard"></div>
+
     <p>Don't have an account? <a href="sign up.html">Sign Up</a></p>
   </div>
 
+  <!-- Scripts -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+
   <script>
+    // LocalStorage Login
     document.getElementById("loginForm").addEventListener("submit", function(event) {
       event.preventDefault();
       
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
       
-      // Retrieve stored user data
       const storedUser = JSON.parse(localStorage.getItem("car_rental_user"));
       
       if (storedUser) {
         if (email === storedUser.email && password === storedUser.password) {
           alert("Login successful!");
-          // Redirect to a dashboard or home page
-          window.location.href = "index..html";
+          window.location.href = "index.html"; // Redirect after successful login
         } else {
           alert("Invalid email or password. Please try again.");
         }
@@ -98,6 +114,16 @@
         alert("No user found. Please sign up first.");
       }
     });
+
+    // Google Sign-In Callback
+    function handleGoogleSignIn(response) {
+      const userObject = jwt_decode(response.credential);
+      console.log("Google User:", userObject);
+
+      alert("Google Login Successful! Welcome " + userObject.name);
+      localStorage.setItem("car_rental_google_user", JSON.stringify(userObject));
+      window.location.href = "index.html"; // Redirect to homepage
+    }
   </script>
 </body>
 </html>
