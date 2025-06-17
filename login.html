@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Car Rental Login</title>
   <style>
     body {
@@ -13,6 +13,7 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
     }
     .container {
       background: #fff;
@@ -64,17 +65,16 @@
   </style>
 </head>
 <body>
-
   <div class="container">
     <h2>Login</h2>
     <form id="loginForm">
       <div class="input-group">
         <label for="email">Email:</label>
-        <input type="email" id="email" required />
+        <input type="email" id="email" required>
       </div>
       <div class="input-group">
         <label for="password">Password:</label>
-        <input type="password" id="password" required />
+        <input type="password" id="password" required>
       </div>
       <button type="submit">Login</button>
     </form>
@@ -95,19 +95,19 @@
   <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
 
   <script>
-    // LocalStorage Email/Password Login
+    // LocalStorage Login
     document.getElementById("loginForm").addEventListener("submit", function(event) {
       event.preventDefault();
-
+      
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
-
+      
       const storedUser = JSON.parse(localStorage.getItem("car_rental_user"));
-
+      
       if (storedUser) {
         if (email === storedUser.email && password === storedUser.password) {
           alert("Login successful!");
-          window.location.href = "index.html"; // ✅ Redirect
+          window.location.href = "https://surendhargokulhari.github.io/car-rental-Main/index.html";
         } else {
           alert("Invalid email or password. Please try again.");
         }
@@ -116,18 +116,15 @@
       }
     });
 
-    // ✅ Google Sign-In Callback
+    // Google Sign-In Callback
     function handleGoogleSignIn(response) {
       const userObject = jwt_decode(response.credential);
       console.log("Google User:", userObject);
 
       alert("Google Login Successful! Welcome " + userObject.name);
       localStorage.setItem("car_rental_google_user", JSON.stringify(userObject));
-
-      // ✅ Redirect after Google Login
-      window.location.href = "index.html";
+      window.location.href = "https://surendhargokulhari.github.io/car-rental-Main/index.html";
     }
   </script>
-
 </body>
 </html>
