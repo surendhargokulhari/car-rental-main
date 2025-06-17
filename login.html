@@ -125,7 +125,7 @@
 
       if (storedUser && email === storedUser.email && password === storedUser.password) {
         alert("Login successful!");
-        window.location.href = "index.html"; // Use relative path
+        window.location.href = "http://127.0.0.1:5500/car-rental-main/index..html.html"; // Use relative path
       } else if (storedUser) {
         alert("Invalid email or password. Please try again.");
       } else {
@@ -138,7 +138,7 @@
       console.log("Google User:", userObject);
       alert("Google Login Successful! Welcome " + userObject.name);
       localStorage.setItem("car_rental_google_user", JSON.stringify(userObject));
-      window.location.href = "index.html"; // Use relative path
+      window.location.href = "http://127.0.0.1:5500/car-rental-main/index..html"; // Use relative path
     }
   </script>
 </body>
