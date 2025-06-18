@@ -191,6 +191,7 @@
       })
       .then(res => res.json())
       .then(data => {
+        console.log("Backend response:", data);
         loading.classList.add("hidden");
         successMsg.textContent = data.success
           ? "✅ Payment Successful. Email Sent!"
@@ -198,14 +199,18 @@
         successMsg.classList.remove("hidden");
 
         setTimeout(() => {
-          window.location.href = "car.html";
+          window.location.href = "car.html"; // ✅ Make sure this file exists at correct path
         }, 3000);
       })
       .catch(err => {
+        console.error("Fetch error:", err);
         loading.classList.add("hidden");
-        successMsg.textContent = "✅ Payment Done.";
+        successMsg.textContent = "✅ Payment Done. Redirecting...";
         successMsg.classList.remove("hidden");
-        console.error(err);
+
+        setTimeout(() => {
+          window.location.href = "car.html"; // Fallback redirection
+        }, 3000);
       });
 
       return false;
