@@ -220,6 +220,8 @@
   </div>
 
 <!-- Scripts -->
+<!-- your full code remains unchanged up to this part -->
+
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const cars = [
@@ -260,7 +262,6 @@
       carsContainer.appendChild(carCard);
     });
 
-    // Global functions
     window.openBookingForm = function (carModel) {
       const bookingForm = document.getElementById("booking-form");
       const carInput = document.getElementById("car-model");
@@ -297,8 +298,15 @@
       const phone = document.getElementById("phone")?.value.trim();
       const carModel = document.getElementById("car-model")?.value;
 
+      // ✅ FIX: disable button and show loading state
+      const submitBtn = e.submitter;
+      submitBtn.disabled = true;
+      submitBtn.innerText = "Booking...";
+
       if (!name || !email || !phone || !carModel) {
         alert("❗ Please fill in all fields.");
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Submit";
         return;
       }
 
@@ -331,6 +339,10 @@
       } catch (err) {
         console.error("❌ Network or server error:", err);
         alert("An error occurred. Please try again later.");
+      } finally {
+        // ✅ Re-enable button and restore text
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Submit";
       }
     });
   });
