@@ -5,12 +5,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cars Collection</title>
-  <!-- Bootstrap & Google Fonts -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
     
   <style>
-    /* GENERAL BODY STYLES */
     body {
       margin: 0;
       padding: 0;
@@ -19,12 +17,11 @@
       position: relative;
     }
 
-    /* HEADER STYLES */
     header {
       position: sticky;
       top: 0;
       z-index: 1000;
-      background-image: linear-gradient( 180.4deg,  rgba(0,6,10,1) 1%, rgba(1,190,237,1) 91.4% );
+      background-image: linear-gradient(180.4deg, rgba(0,6,10,1) 1%, rgba(1,190,237,1) 91.4%);
       animation: slideDown 0.5s ease-out;
       transition: background-color 0.3s ease, box-shadow 0.3s ease;
       color: white;
@@ -37,15 +34,10 @@
     }
 
     @keyframes slideDown {
-      0% {
-        transform: translateY(-100%);
-      }
-      100% {
-        transform: translateY(0);
-      }
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(0); }
     }
 
-    /* NAVIGATION */
     nav ul {
       list-style: none;
       padding: 0;
@@ -95,7 +87,6 @@
       background-color: yellow;
     }
 
-    /* CARD STYLING */
     .card img {
       height: 200px;
       object-fit: cover;
@@ -109,7 +100,6 @@
       margin-bottom: 30px;
     }
 
-    /* FORM MODAL */
     .form-container {
       display: none;
       position: fixed;
@@ -133,7 +123,6 @@
       margin-bottom: 15px;
     }
 
-    /* RESPONSIVENESS */
     @media (max-width: 768px) {
       nav ul {
         flex-direction: column;
@@ -162,11 +151,24 @@
         height: 150px;
       }
     }
+
+    /* Spinner Overlay */
+    #loading-spinner {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+    }
   </style>
 </head>
 <body>
 
-  
 <header class="bg-dark text-white p-4">
   <nav class="navbar navbar-expand-lg navbar-dark container">
     <a class="navbar-brand fw-bold" href="#">Available Cars</a>
@@ -176,51 +178,40 @@
     
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link " href="home.html">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="car.html" target="_blank">Cars</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="about.html" target="_blank">About</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="contact.html" target="_blank">Contact Us</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="login.html">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="logout.html">Logout</a>
-        </li>
+        <li class="nav-item"><a class="nav-link" href="home.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link active" href="car.html" target="_blank">Cars</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html" target="_blank">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.html" target="_blank">Contact Us</a></li>
+        <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+        <li class="nav-item"><a class="nav-link" href="logout.html">Logout</a></li>
       </ul>
     </div>
   </nav>
 </header>
 
+<section class="container my-5">
+  <div class="row" id="cars"></div>
+</section>
 
-  <section class="container my-5">
-    <div class="row" id="cars">
-      <!-- CAR CARD will be populated here by JS -->
-    </div>
-  </section>
+<!-- Booking Form -->
+<div id="booking-form" class="form-container">
+  <h2>Book Your Car</h2>
+  <form id="form">
+    <input type="text" id="name" placeholder="Enter your name" required class="form-control" />
+    <input type="email" id="email" placeholder="Enter your email" required class="form-control" />
+    <input type="text" id="car-model" readonly class="form-control" />
+    <input type="tel" id="phone" placeholder="Enter your 10-digit mobile number" maxlength="10" required class="form-control" />
+    <button type="submit" class="btn btn-success w-100 mt-3">Submit</button>
+    <button type="button" onclick="closeBookingForm()" class="btn btn-outline-danger w-100 mt-2">Close</button>
+  </form>
+</div>
 
-  <!-- Booking Form -->
-  <div id="booking-form" class="form-container">
-    <h2>Book Your Car</h2>
-    <form id="form">
-      <input type="text" id="name" placeholder="Enter your name" required class="form-control" />
-      <input type="email" id="email" placeholder="Enter your email" required class="form-control" />
-      <input type="text" id="car-model" readonly class="form-control" />
-      <input type="tel" id="phone" placeholder="Enter your 10-digit mobile number" maxlength="10" required class="form-control" />
-      <button type="submit" class="btn btn-success w-100 mt-3">Submit</button>
-      <button type="button" onclick="closeBookingForm()" class="btn btn-outline-danger w-100 mt-2">Close</button>
-    </form>
+<!-- Spinner -->
+<div id="loading-spinner">
+  <div class="spinner-border text-light" style="width: 4rem; height: 4rem;" role="status">
+    <span class="visually-hidden">Loading...</span>
   </div>
-
-<!-- Scripts -->
-<!-- your full code remains unchanged up to this part -->
+</div>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
@@ -239,11 +230,6 @@
 
     const carsContainer = document.getElementById("cars");
 
-    if (!carsContainer) {
-      console.error("❌ Cars container not found in DOM.");
-      return;
-    }
-
     cars.forEach(car => {
       const carCard = document.createElement("div");
       carCard.classList.add("col-md-4", "d-flex", "align-items-stretch");
@@ -258,92 +244,67 @@
           <button onclick="openBookingForm('${car.name}')" class="btn btn-primary">Book Now</button>
         </div>
       `;
-
       carsContainer.appendChild(carCard);
     });
 
     window.openBookingForm = function (carModel) {
-      const bookingForm = document.getElementById("booking-form");
-      const carInput = document.getElementById("car-model");
-
-      if (bookingForm && carInput) {
-        carInput.value = carModel;
-        bookingForm.style.display = "block";
-        carsContainer.style.display = "none";
-      } else {
-        console.error("❌ Booking form or car-model input not found.");
-      }
+      document.getElementById("car-model").value = carModel;
+      document.getElementById("booking-form").style.display = "block";
+      carsContainer.style.display = "none";
     };
 
     window.closeBookingForm = function () {
-      const bookingForm = document.getElementById("booking-form");
-      if (bookingForm) {
-        bookingForm.style.display = "none";
-        carsContainer.style.display = "flex";
-      }
+      document.getElementById("booking-form").style.display = "none";
+      carsContainer.style.display = "flex";
     };
 
-    const form = document.getElementById("form");
-
-    if (!form) {
-      console.error("❌ Booking form element with ID 'form' not found.");
-      return;
-    }
-
-    form.addEventListener("submit", async function (e) {
+    document.getElementById("form").addEventListener("submit", async function (e) {
       e.preventDefault();
 
-      const name = document.getElementById("name")?.value.trim();
-      const email = document.getElementById("email")?.value.trim();
-      const phone = document.getElementById("phone")?.value.trim();
-      const carModel = document.getElementById("car-model")?.value;
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const carModel = document.getElementById("car-model").value;
 
-      // ✅ FIX: disable button and show loading state
       const submitBtn = e.submitter;
       submitBtn.disabled = true;
       submitBtn.innerText = "Booking...";
+      document.getElementById("loading-spinner").style.display = "flex";
 
       if (!name || !email || !phone || !carModel) {
         alert("❗ Please fill in all fields.");
         submitBtn.disabled = false;
         submitBtn.innerText = "Submit";
+        document.getElementById("loading-spinner").style.display = "none";
         return;
       }
-
-      const bookingData = { name, email, phone, carModel };
 
       try {
         const response = await fetch("https://car-rental-backend-d0ad.onrender.com/api/book", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(bookingData)
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, phone, carModel })
         });
 
-        let data;
-        try {
-          data = await response.json();
-        } catch (jsonErr) {
-          console.error("⚠️ Failed to parse JSON:", jsonErr);
-          alert("Server error. Try again later.");
-          return;
-        }
+        const data = await response.json();
 
         if (response.ok) {
           alert("✅ Booking successful!");
           window.location.href = "payment.html";
         } else {
-          alert(`❌ Booking failed: ${data?.message || "Unknown error"}`);
+          alert(`❌ Booking failed: ${data.message || "Unknown error"}`);
         }
       } catch (err) {
         console.error("❌ Network or server error:", err);
         alert("An error occurred. Please try again later.");
       } finally {
-        // ✅ Re-enable button and restore text
         submitBtn.disabled = false;
         submitBtn.innerText = "Submit";
+        document.getElementById("loading-spinner").style.display = "none";
       }
     });
   });
 </script>
+
+</body>
+</html>
